@@ -3,14 +3,18 @@
   "version": "1.0.0",
   "description": "qr code generator",
   "main": "script.js",
-  "type": "module",
+  
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Aditya Kishore",
   "license": "ISC",
   "dependencies": {
-    "inquirer": "^9.2.23",
-    "qr-image": "^3.2.0"
+    "fs": "^0.0.1-security",
+    "inquirer": "^9.3.7",
+    "jimp": "^1.6.0",
+    "qr": "^0.2.4",
+    "qr-image": "^3.2.0",
+    "qrcode-reader": "^1.0.4"
   }
 }

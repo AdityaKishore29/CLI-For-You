@@ -1,27 +1,38 @@
-import inquirer from "inquirer";
-import qr from "qr-image";
-import fs from "fs";
-inquirer
-    .prompt([
-        {
-            message: "Type in your URL : ",
-            name: "URL",
-        },
-    ])
-    .then((answer) => {
-        const url = answer.URL;
-        var qr_img = qr.image(url,{margin: 1});
-        qr_img.pipe(fs.createWriteStream('qr_img.png'));
+const fs = require('fs');
+const QRCode = require('qrcode');
 
-        fs.writeFile("URL.txt", url, (err) => {
-            if (err) throw err;
-            console.log("The file has been saved!");
-        });
-    })
-    .catch((error) => {
-        if (error.isTtyError) {
-            // Prompt couldn't be rendered in the current environment
-        } else {
-            // Something else went wrong
+async function generateQRCode(inputFile, outputImage) {
+    try {
+        if (!fs.existsSync(inputFile)) {
+            console.error(`Error: File '${inputFile}' does not exist.`);
+            return;
         }
-    });
+        const fileContent = fs.readFileSync(inputFile);
+        let qrContent;
+        if (inputFile.endsWith('.txt')) {
+            qrContent = fileContent.toString('utf-8');
+        } else {
+            qrContent = fileContent.toString('base64'); 
+        }
+        await QRCode.toFile(outputImage, qrContent, {
+            errorCorrectionLevel: 'H',
+            type: 'png',
+            color: {
+                dark: '#000000',
+                light: '#ffffff',
+            },
+        });
+
+        console.log(`QR Code successfully saved as '${outputImage}'.`);
+    } catch (err) {
+        console.error(`An error occurred: ${err.message}`);
+    }
+}
+const args = process.argv.slice(2);
+
+if (args.length !== 2) {
+    console.error('Usage: node qr_encoder.js <input_file> <output_image>');
+} else {
+    const [inputFile, outputImage] = args;
+    generateQRCode(inputFile, outputImage);
+}

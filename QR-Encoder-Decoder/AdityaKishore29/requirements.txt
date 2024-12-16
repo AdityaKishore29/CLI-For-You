@@ -1,0 +1,2 @@
+1. qr-code - https://www.npmjs.com/package/qrcode
+2. fs - https://www.npmjs.com/package/fs
